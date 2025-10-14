@@ -7,8 +7,9 @@ import { RoomBrowser } from "@/components/RoomBrowser";
 import { CreateRoomDialog } from "@/components/CreateRoomDialog";
 import { DMList } from "@/components/DMList";
 import { DirectMessageView } from "@/components/DirectMessageView";
+import { FriendsList } from "@/components/FriendsList";
 import { Button } from "@/components/ui/button";
-import { Hash, Menu, MessageSquare, Compass } from "lucide-react";
+import { Hash, Menu, MessageSquare, Compass, Users } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -37,7 +38,7 @@ export default function Chat() {
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [currentRoom, setCurrentRoom] = useState<any>(null);
-  const [view, setView] = useState<'chat' | 'rooms' | 'dms'>('chat');
+  const [view, setView] = useState<'chat' | 'rooms' | 'dms' | 'friends'>('chat');
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [dmPartner, setDmPartner] = useState<Profile | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -244,6 +245,15 @@ export default function Chat() {
             <MessageSquare className="w-5 h-5 mr-2" />
             <span>Direct Messages</span>
           </Button>
+
+          <Button
+            variant={view === 'friends' ? 'default' : 'ghost'}
+            className="w-full justify-start"
+            onClick={() => setView('friends')}
+          >
+            <Users className="w-5 h-5 mr-2" />
+            <span>Friends</span>
+          </Button>
         </div>
 
         {currentProfile && (
@@ -276,6 +286,26 @@ export default function Chat() {
             onJoinRoom={handleJoinRoom}
             onCreateRoom={() => setShowCreateRoom(true)}
           />
+        ) : view === 'friends' ? (
+          <div className="flex-1 flex overflow-hidden">
+            <div className="flex-1 flex items-center justify-center text-muted-foreground">
+              <div className="text-center">
+                <Users className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                <p className="text-lg font-medium">Friends & Connections</p>
+                <p className="text-sm mt-2">Manage your friends and see your followers</p>
+              </div>
+            </div>
+            <FriendsList 
+              currentUserId={currentProfile?.id || ''} 
+              onDMClick={(userId, username) => {
+                const user = onlineUsers.find(u => u.id === userId);
+                if (user) {
+                  setDmPartner(user);
+                  setView('dms');
+                }
+              }}
+            />
+          </div>
         ) : view === 'dms' && dmPartner ? (
           <DirectMessageView
             currentProfileId={currentProfile?.id || ''}
@@ -330,7 +360,19 @@ export default function Chat() {
       </div>
 
       {/* User List (only shown in chat view) */}
-      {view === 'chat' && <UserList users={onlineUsers} />}
+      {view === 'chat' && (
+        <UserList 
+          users={onlineUsers} 
+          currentUserId={currentProfile?.id || ''}
+          onDMClick={(userId, username) => {
+            const user = onlineUsers.find(u => u.id === userId);
+            if (user) {
+              setDmPartner(user);
+              setView('dms');
+            }
+          }}
+        />
+      )}
 
       {/* Create Room Dialog */}
       <CreateRoomDialog
