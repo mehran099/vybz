@@ -8,8 +8,10 @@ import { CreateRoomDialog } from "@/components/CreateRoomDialog";
 import { DMList } from "@/components/DMList";
 import { DirectMessageView } from "@/components/DirectMessageView";
 import { FriendsList } from "@/components/FriendsList";
+import { UserStatsDisplay } from "@/components/UserStatsDisplay";
+import { Leaderboard } from "@/components/Leaderboard";
 import { Button } from "@/components/ui/button";
-import { Hash, Menu, MessageSquare, Compass, Users } from "lucide-react";
+import { Hash, Menu, MessageSquare, Compass, Users, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -38,7 +40,7 @@ export default function Chat() {
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [currentRoom, setCurrentRoom] = useState<any>(null);
-  const [view, setView] = useState<'chat' | 'rooms' | 'dms' | 'friends'>('chat');
+  const [view, setView] = useState<'chat' | 'rooms' | 'dms' | 'friends' | 'leaderboard'>('chat');
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [dmPartner, setDmPartner] = useState<Profile | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -254,10 +256,20 @@ export default function Chat() {
             <Users className="w-5 h-5 mr-2" />
             <span>Friends</span>
           </Button>
+
+          <Button
+            variant={view === 'leaderboard' ? 'default' : 'ghost'}
+            className="w-full justify-start"
+            onClick={() => setView('leaderboard')}
+          >
+            <TrendingUp className="w-5 h-5 mr-2" />
+            <span>Leaderboard</span>
+          </Button>
         </div>
 
         {currentProfile && (
-          <div className="mt-auto pt-4 border-t border-border">
+          <div className="mt-auto pt-4 border-t border-border space-y-3">
+            <UserStatsDisplay userId={currentProfile.id} compact />
             <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/50">
               <div 
                 className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
@@ -286,6 +298,8 @@ export default function Chat() {
             onJoinRoom={handleJoinRoom}
             onCreateRoom={() => setShowCreateRoom(true)}
           />
+        ) : view === 'leaderboard' ? (
+          <Leaderboard />
         ) : view === 'friends' ? (
           <div className="flex-1 flex overflow-hidden">
             <div className="flex-1 flex items-center justify-center text-muted-foreground">

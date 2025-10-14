@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      badges: {
+        Row: {
+          color: string
+          created_at: string | null
+          description: string
+          icon: string
+          id: string
+          name: string
+          requirement_type: string
+          requirement_value: number | null
+        }
+        Insert: {
+          color?: string
+          created_at?: string | null
+          description: string
+          icon: string
+          id?: string
+          name: string
+          requirement_type: string
+          requirement_value?: number | null
+        }
+        Update: {
+          color?: string
+          created_at?: string | null
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+          requirement_type?: string
+          requirement_value?: number | null
+        }
+        Relationships: []
+      }
       blocks: {
         Row: {
           blocked_user_id: string
@@ -485,11 +518,89 @@ export type Database = {
           },
         ]
       }
+      user_badges: {
+        Row: {
+          badge_id: string
+          earned_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_badges_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_stats: {
+        Row: {
+          created_at: string | null
+          id: string
+          level: number
+          message_count: number
+          updated_at: string | null
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          level?: number
+          message_count?: number
+          updated_at?: string | null
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          level?: number
+          message_count?: number
+          updated_at?: string | null
+          user_id?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_stats_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      calculate_level: {
+        Args: { xp_amount: number }
+        Returns: number
+      }
       cleanup_typing_indicators: {
         Args: Record<PropertyKey, never>
         Returns: undefined
