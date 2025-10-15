@@ -113,9 +113,9 @@ export const ChatMessage = ({ messageId, username, content, color, timestamp, is
   };
 
   return (
-    <div className={`group flex gap-3 p-3 rounded-lg hover:bg-muted/30 transition-all ${isOwn ? 'bg-primary/5' : ''}`}>
+    <div className={`group flex gap-2 md:gap-3 p-2 md:p-3 rounded-lg hover:bg-muted/30 transition-all ${isOwn ? 'bg-primary/5' : ''}`}>
       <div 
-        className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
+        className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs md:text-sm font-bold shrink-0"
         style={{ 
           background: `linear-gradient(135deg, ${color}, ${color}aa)`,
           boxShadow: `0 0 20px ${color}40`
@@ -124,9 +124,9 @@ export const ChatMessage = ({ messageId, username, content, color, timestamp, is
         {username[0].toUpperCase()}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="flex items-baseline gap-2 mb-1">
+        <div className="flex items-baseline gap-1 md:gap-2 mb-1 flex-wrap">
           <span 
-            className="font-semibold text-sm"
+            className="font-semibold text-xs md:text-sm"
             style={{ color }}
           >
             {username}
@@ -161,7 +161,7 @@ export const ChatMessage = ({ messageId, username, content, color, timestamp, is
             </PopoverContent>
           </Popover>
         </div>
-        <p className="text-sm text-foreground break-words mb-2">{content}</p>
+        <p className="text-xs md:text-sm text-foreground break-words mb-2">{content}</p>
         
         {/* Reactions display */}
         {reactions.length > 0 && (

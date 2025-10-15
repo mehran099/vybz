@@ -47,6 +47,7 @@ export default function Chat() {
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [dmPartner, setDmPartner] = useState<Profile | null>(null);
   const [userRole, setUserRole] = useState<string>('user');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -228,20 +229,44 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-background overflow-hidden">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className="w-64 bg-card border-r border-border p-4 flex flex-col">
-        <div className="mb-6">
+      <div className={`
+        fixed md:relative z-50 md:z-0
+        w-64 h-full bg-card border-r border-border p-4 flex flex-col
+        transition-transform duration-300 ease-in-out
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
+        <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             VYBE
           </h1>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <Menu className="w-5 h-5" />
+          </Button>
         </div>
         
         <div className="space-y-2 flex-1">
           <Button
             variant={view === 'chat' ? 'default' : 'ghost'}
             className="w-full justify-start"
-            onClick={() => setView('chat')}
+            onClick={() => {
+              setView('chat');
+              setSidebarOpen(false);
+            }}
           >
             <Hash className="w-5 h-5 mr-2" />
             <span>{currentRoom?.name || 'Chat'}</span>
@@ -250,7 +275,10 @@ export default function Chat() {
           <Button
             variant={view === 'rooms' ? 'default' : 'ghost'}
             className="w-full justify-start"
-            onClick={() => setView('rooms')}
+            onClick={() => {
+              setView('rooms');
+              setSidebarOpen(false);
+            }}
           >
             <Compass className="w-5 h-5 mr-2" />
             <span>Browse Rooms</span>
@@ -259,7 +287,10 @@ export default function Chat() {
           <Button
             variant={view === 'dms' ? 'default' : 'ghost'}
             className="w-full justify-start"
-            onClick={() => setView('dms')}
+            onClick={() => {
+              setView('dms');
+              setSidebarOpen(false);
+            }}
           >
             <MessageSquare className="w-5 h-5 mr-2" />
             <span>Direct Messages</span>
@@ -268,7 +299,10 @@ export default function Chat() {
           <Button
             variant={view === 'friends' ? 'default' : 'ghost'}
             className="w-full justify-start"
-            onClick={() => setView('friends')}
+            onClick={() => {
+              setView('friends');
+              setSidebarOpen(false);
+            }}
           >
             <Users className="w-5 h-5 mr-2" />
             <span>Friends</span>
@@ -277,7 +311,10 @@ export default function Chat() {
           <Button
             variant={view === 'leaderboard' ? 'default' : 'ghost'}
             className="w-full justify-start"
-            onClick={() => setView('leaderboard')}
+            onClick={() => {
+              setView('leaderboard');
+              setSidebarOpen(false);
+            }}
           >
             <TrendingUp className="w-5 h-5 mr-2" />
             <span>Leaderboard</span>
@@ -286,7 +323,10 @@ export default function Chat() {
           <Button
             variant={view === 'theme' ? 'default' : 'ghost'}
             className="w-full justify-start"
-            onClick={() => setView('theme')}
+            onClick={() => {
+              setView('theme');
+              setSidebarOpen(false);
+            }}
           >
             <Palette className="w-5 h-5 mr-2" />
             <span>Theme</span>
@@ -296,7 +336,10 @@ export default function Chat() {
             <Button
               variant={view === 'moderation' ? 'default' : 'ghost'}
               className="w-full justify-start"
-              onClick={() => setView('moderation')}
+              onClick={() => {
+                setView('moderation');
+                setSidebarOpen(false);
+              }}
             >
               <Shield className="w-5 h-5 mr-2" />
               <span>Moderation</span>
@@ -381,21 +424,26 @@ export default function Chat() {
         ) : (
           <>
             {/* Chat Header */}
-            <div className="h-16 bg-card border-b border-border px-6 flex items-center justify-between">
+            <div className="h-16 bg-card border-b border-border px-4 md:px-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Hash className="w-6 h-6 text-primary" />
-                <div>
-                  <h2 className="font-semibold text-lg">{currentRoom?.name || 'Chat'}</h2>
-                  <p className="text-xs text-muted-foreground">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden"
+                  onClick={() => setSidebarOpen(true)}
+                >
+                  <Menu className="w-5 h-5" />
+                </Button>
+                <Hash className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+                <div className="min-w-0">
+                  <h2 className="font-semibold text-base md:text-lg truncate">{currentRoom?.name || 'Chat'}</h2>
+                  <p className="text-xs text-muted-foreground hidden sm:block truncate">
                     {currentRoom?.description || 'Welcome to VYBE!'}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <ThemeToggle />
-                <Button variant="ghost" size="icon">
-                  <Menu className="w-5 h-5" />
-                </Button>
               </div>
             </div>
 
@@ -422,19 +470,21 @@ export default function Chat() {
         )}
       </div>
 
-      {/* User List (only shown in chat view) */}
+      {/* User List (only shown in chat view on desktop) */}
       {view === 'chat' && (
-        <UserList 
-          users={onlineUsers} 
-          currentUserId={currentProfile?.id || ''}
-          onDMClick={(userId, username) => {
-            const user = onlineUsers.find(u => u.id === userId);
-            if (user) {
-              setDmPartner(user);
-              setView('dms');
-            }
-          }}
-        />
+        <div className="hidden lg:block">
+          <UserList 
+            users={onlineUsers} 
+            currentUserId={currentProfile?.id || ''}
+            onDMClick={(userId, username) => {
+              const user = onlineUsers.find(u => u.id === userId);
+              if (user) {
+                setDmPartner(user);
+                setView('dms');
+              }
+            }}
+          />
+        </div>
       )}
 
       {/* Create Room Dialog */}
