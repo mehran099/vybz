@@ -10,8 +10,11 @@ import { DirectMessageView } from "@/components/DirectMessageView";
 import { FriendsList } from "@/components/FriendsList";
 import { UserStatsDisplay } from "@/components/UserStatsDisplay";
 import { Leaderboard } from "@/components/Leaderboard";
+import { ThemeSettings } from "@/components/ThemeSettings";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { ModerationDashboard } from "@/components/ModerationDashboard";
 import { Button } from "@/components/ui/button";
-import { Hash, Menu, MessageSquare, Compass, Users, TrendingUp } from "lucide-react";
+import { Hash, Menu, MessageSquare, Compass, Users, TrendingUp, Palette, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -40,9 +43,10 @@ export default function Chat() {
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [currentRoom, setCurrentRoom] = useState<any>(null);
-  const [view, setView] = useState<'chat' | 'rooms' | 'dms' | 'friends' | 'leaderboard'>('chat');
+  const [view, setView] = useState<'chat' | 'rooms' | 'dms' | 'friends' | 'leaderboard' | 'theme' | 'moderation'>('chat');
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [dmPartner, setDmPartner] = useState<Profile | null>(null);
+  const [userRole, setUserRole] = useState<string>('user');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -83,6 +87,19 @@ export default function Chat() {
     if (profile) {
       setCurrentProfile(profile);
       fetchOnlineUsers();
+      
+      // Check user role
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", profile.id);
+      
+      if (roles && roles.length > 0) {
+        // Set highest role (admin > moderator > user)
+        const hasAdmin = roles.some(r => r.role === 'admin');
+        const hasModerator = roles.some(r => r.role === 'moderator');
+        setUserRole(hasAdmin ? 'admin' : hasModerator ? 'moderator' : 'user');
+      }
     }
   };
 
@@ -265,6 +282,26 @@ export default function Chat() {
             <TrendingUp className="w-5 h-5 mr-2" />
             <span>Leaderboard</span>
           </Button>
+
+          <Button
+            variant={view === 'theme' ? 'default' : 'ghost'}
+            className="w-full justify-start"
+            onClick={() => setView('theme')}
+          >
+            <Palette className="w-5 h-5 mr-2" />
+            <span>Theme</span>
+          </Button>
+
+          {(userRole === 'admin' || userRole === 'moderator') && (
+            <Button
+              variant={view === 'moderation' ? 'default' : 'ghost'}
+              className="w-full justify-start"
+              onClick={() => setView('moderation')}
+            >
+              <Shield className="w-5 h-5 mr-2" />
+              <span>Moderation</span>
+            </Button>
+          )}
         </div>
 
         {currentProfile && (
@@ -300,6 +337,15 @@ export default function Chat() {
           />
         ) : view === 'leaderboard' ? (
           <Leaderboard />
+        ) : view === 'theme' ? (
+          <div className="flex-1 overflow-y-auto">
+            <ThemeSettings userId={currentProfile?.id || ''} />
+          </div>
+        ) : view === 'moderation' ? (
+          <ModerationDashboard 
+            currentUserId={currentProfile?.id || ''} 
+            userRole={userRole}
+          />
         ) : view === 'friends' ? (
           <div className="flex-1 flex overflow-hidden">
             <div className="flex-1 flex items-center justify-center text-muted-foreground">
@@ -345,9 +391,12 @@ export default function Chat() {
                   </p>
                 </div>
               </div>
-              <Button variant="ghost" size="icon">
-                <Menu className="w-5 h-5" />
-              </Button>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <Button variant="ghost" size="icon">
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </div>
             </div>
 
             {/* Messages */}

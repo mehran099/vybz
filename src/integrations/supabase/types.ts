@@ -343,44 +343,115 @@ export type Database = {
           },
         ]
       }
+      moderation_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          duration_minutes: number | null
+          id: string
+          moderator_id: string
+          reason: string | null
+          target_user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          duration_minutes?: number | null
+          id?: string
+          moderator_id: string
+          reason?: string | null
+          target_user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          duration_minutes?: number | null
+          id?: string
+          moderator_id?: string
+          reason?: string | null
+          target_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moderation_logs_moderator_id_fkey"
+            columns: ["moderator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "moderation_logs_target_user_id_fkey"
+            columns: ["target_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
+          ban_reason: string | null
+          banned_at: string | null
+          banned_by: string | null
           bio: string | null
           created_at: string | null
           display_color: string | null
           id: string
+          is_banned: boolean | null
           is_guest: boolean | null
+          is_muted: boolean | null
           last_seen: string | null
+          mute_until: string | null
           updated_at: string | null
           user_id: string | null
           username: string
         }
         Insert: {
           avatar_url?: string | null
+          ban_reason?: string | null
+          banned_at?: string | null
+          banned_by?: string | null
           bio?: string | null
           created_at?: string | null
           display_color?: string | null
           id?: string
+          is_banned?: boolean | null
           is_guest?: boolean | null
+          is_muted?: boolean | null
           last_seen?: string | null
+          mute_until?: string | null
           updated_at?: string | null
           user_id?: string | null
           username: string
         }
         Update: {
           avatar_url?: string | null
+          ban_reason?: string | null
+          banned_at?: string | null
+          banned_by?: string | null
           bio?: string | null
           created_at?: string | null
           display_color?: string | null
           id?: string
+          is_banned?: boolean | null
           is_guest?: boolean | null
+          is_muted?: boolean | null
           last_seen?: string | null
+          mute_until?: string | null
           updated_at?: string | null
           user_id?: string | null
           username?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_banned_by_fkey"
+            columns: ["banned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reports: {
         Row: {
@@ -554,6 +625,86 @@ export type Database = {
           },
         ]
       }
+      user_preferences: {
+        Row: {
+          background_theme: string | null
+          bubble_style: string | null
+          created_at: string | null
+          font_family: string | null
+          id: string
+          theme_mode: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          background_theme?: string | null
+          bubble_style?: string | null
+          created_at?: string | null
+          font_family?: string | null
+          id?: string
+          theme_mode?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          background_theme?: string | null
+          bubble_style?: string | null
+          created_at?: string | null
+          font_family?: string | null
+          id?: string
+          theme_mode?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_roles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_stats: {
         Row: {
           created_at: string | null
@@ -605,9 +756,16 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -734,6 +892,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
