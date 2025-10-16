@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
-import { Palette, Type, Image } from "lucide-react";
+import { Palette, Type, Image, ArrowLeft, Menu } from "lucide-react";
 
 interface ThemePreferences {
   bubble_style: string;
@@ -15,9 +15,11 @@ interface ThemePreferences {
 
 interface ThemeSettingsProps {
   userId: string;
+  onBack?: () => void;
+  onToggleSidebar?: () => void;
 }
 
-export function ThemeSettings({ userId }: ThemeSettingsProps) {
+export function ThemeSettings({ userId, onBack, onToggleSidebar }: ThemeSettingsProps) {
   const [preferences, setPreferences] = useState<ThemePreferences>({
     bubble_style: "default",
     font_family: "inter",
@@ -75,6 +77,29 @@ export function ThemeSettings({ userId }: ThemeSettingsProps) {
 
   return (
     <div className="space-y-6 p-4">
+      {(onBack || onToggleSidebar) && (
+        <div className="flex items-center gap-2 md:hidden mb-4">
+          {onToggleSidebar && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onToggleSidebar}
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+          )}
+          {onBack && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onBack}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+          )}
+          <h2 className="text-xl font-bold">Theme Settings</h2>
+        </div>
+      )}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

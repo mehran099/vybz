@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
-import { Shield, Ban, Volume2, VolumeX, AlertTriangle, Clock } from "lucide-react";
+import { Shield, Ban, Volume2, VolumeX, AlertTriangle, Clock, ArrowLeft, Menu } from "lucide-react";
 
 interface Profile {
   id: string;
@@ -31,9 +31,11 @@ interface ModerationLog {
 interface ModerationDashboardProps {
   currentUserId: string;
   userRole: string;
+  onBack?: () => void;
+  onToggleSidebar?: () => void;
 }
 
-export function ModerationDashboard({ currentUserId, userRole }: ModerationDashboardProps) {
+export function ModerationDashboard({ currentUserId, userRole, onBack, onToggleSidebar }: ModerationDashboardProps) {
   const [users, setUsers] = useState<Profile[]>([]);
   const [logs, setLogs] = useState<ModerationLog[]>([]);
   const [selectedUser, setSelectedUser] = useState<Profile | null>(null);
@@ -224,9 +226,33 @@ export function ModerationDashboard({ currentUserId, userRole }: ModerationDashb
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 h-full">
-      <div className="space-y-4">
-        <Card>
+    <div className="h-full overflow-auto">
+      {(onBack || onToggleSidebar) && (
+        <div className="flex items-center gap-2 p-4 border-b border-border md:hidden">
+          {onToggleSidebar && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onToggleSidebar}
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+          )}
+          {onBack && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onBack}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+          )}
+          <h2 className="text-xl font-bold">Moderation</h2>
+        </div>
+      )}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
+        <div className="space-y-4">
+          <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
@@ -372,6 +398,7 @@ export function ModerationDashboard({ currentUserId, userRole }: ModerationDashb
           </ScrollArea>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

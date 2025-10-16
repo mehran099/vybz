@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Trophy, Medal, Award, TrendingUp } from "lucide-react";
+import { Trophy, Medal, Award, TrendingUp, ArrowLeft, Menu } from "lucide-react";
 
 interface LeaderboardEntry {
   user_id: string;
@@ -14,7 +15,12 @@ interface LeaderboardEntry {
   };
 }
 
-export const Leaderboard = () => {
+interface LeaderboardProps {
+  onBack?: () => void;
+  onToggleSidebar?: () => void;
+}
+
+export const Leaderboard = ({ onBack, onToggleSidebar }: LeaderboardProps = {}) => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [timeframe, setTimeframe] = useState<'all' | 'week' | 'month'>('all');
 
@@ -90,16 +96,36 @@ export const Leaderboard = () => {
 
   return (
     <div className="h-full flex flex-col bg-background">
-      <div className="p-6 border-b border-white/10">
+      <div className="p-4 md:p-6 border-b border-white/10">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-            <TrendingUp className="w-6 h-6 text-white" />
+          {onToggleSidebar && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden shrink-0"
+              onClick={onToggleSidebar}
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+          )}
+          {onBack && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden shrink-0"
+              onClick={onBack}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+          )}
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0">
+            <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-white" />
           </div>
-          <div>
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <div className="min-w-0">
+            <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent truncate">
               Leaderboard
             </h2>
-            <p className="text-sm text-muted-foreground">Top VYBE chatters</p>
+            <p className="text-xs md:text-sm text-muted-foreground">Top VYBE chatters</p>
           </div>
         </div>
 

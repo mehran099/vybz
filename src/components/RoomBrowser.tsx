@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Globe, Users, MessageCircle, Hash, Search, Plus, Lock } from "lucide-react";
+import { Globe, Users, MessageCircle, Hash, Search, Plus, Lock, ArrowLeft, Menu } from "lucide-react";
 import { toast } from "sonner";
 
 interface Room {
@@ -21,9 +21,11 @@ interface RoomBrowserProps {
   currentProfileId: string;
   onJoinRoom: (roomId: string) => void;
   onCreateRoom: () => void;
+  onBack?: () => void;
+  onToggleSidebar?: () => void;
 }
 
-export const RoomBrowser = ({ currentProfileId, onJoinRoom, onCreateRoom }: RoomBrowserProps) => {
+export const RoomBrowser = ({ currentProfileId, onJoinRoom, onCreateRoom, onBack, onToggleSidebar }: RoomBrowserProps) => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -102,14 +104,37 @@ export const RoomBrowser = ({ currentProfileId, onJoinRoom, onCreateRoom }: Room
       {/* Header */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold">Browse Rooms</h2>
+          <div className="flex items-center gap-2">
+            {onToggleSidebar && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                onClick={onToggleSidebar}
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+            )}
+            {onBack && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                onClick={onBack}
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+            )}
+            <h2 className="text-xl font-bold">Browse Rooms</h2>
+          </div>
           <Button
             onClick={onCreateRoom}
             size="sm"
             className="bg-gradient-to-r from-primary to-secondary hover:opacity-90"
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Create Room
+            <Plus className="w-4 h-4 mr-2 hidden sm:block" />
+            <span className="hidden sm:inline">Create Room</span>
+            <Plus className="w-4 h-4 sm:hidden" />
           </Button>
         </div>
 

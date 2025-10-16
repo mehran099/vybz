@@ -420,6 +420,7 @@ export default function Chat() {
             currentProfileId={currentProfile?.id || ''}
             onSelectConversation={handleSelectDM}
             onlineUsers={onlineUsers}
+            onToggleSidebar={() => setSidebarOpen(true)}
           />
         ) : (
           <>

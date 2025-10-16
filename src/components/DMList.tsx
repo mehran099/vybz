@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
-import { Search, MessageSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Search, MessageSquare, ArrowLeft, Menu } from "lucide-react";
 import { format } from "date-fns";
 
 interface Profile {
@@ -21,9 +22,11 @@ interface DMListProps {
   currentProfileId: string;
   onSelectConversation: (profile: Profile) => void;
   onlineUsers: Profile[];
+  onBack?: () => void;
+  onToggleSidebar?: () => void;
 }
 
-export const DMList = ({ currentProfileId, onSelectConversation, onlineUsers }: DMListProps) => {
+export const DMList = ({ currentProfileId, onSelectConversation, onlineUsers, onBack, onToggleSidebar }: DMListProps) => {
   const [conversations, setConversations] = useState<DMConversation[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -103,7 +106,29 @@ export const DMList = ({ currentProfileId, onSelectConversation, onlineUsers }: 
   return (
     <div className="h-full flex flex-col">
       <div className="p-4 border-b border-border">
-        <h2 className="text-xl font-bold mb-3">Direct Messages</h2>
+        <div className="flex items-center gap-2 mb-3">
+          {onToggleSidebar && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={onToggleSidebar}
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+          )}
+          {onBack && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={onBack}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+          )}
+          <h2 className="text-xl font-bold">Direct Messages</h2>
+        </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
