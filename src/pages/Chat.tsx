@@ -347,6 +347,30 @@ export default function Chat() {
           )}
         </div>
 
+        {/* Support Creator Section */}
+        <div className="mt-4 p-4 border-t border-border space-y-3">
+          <h3 className="text-sm font-semibold text-muted-foreground">Support Creator</h3>
+          <p className="text-xs text-muted-foreground">Your tips help us make the site bigger!</p>
+          
+          <a 
+            href="https://patreon.com/VYBE09?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <Button variant="outline" className="w-full justify-start" size="sm">
+              <span className="mr-2">❤️</span>
+              Support on Patreon
+            </Button>
+          </a>
+
+          <div className="text-xs space-y-1 p-2 rounded-lg bg-muted/50">
+            <p className="font-medium">Pakistan Tips:</p>
+            <p className="font-mono">RAAST: 03213512136</p>
+            <p className="font-mono break-all">IBAN: PK02JCMA05089232135121136</p>
+          </div>
+        </div>
+
         {currentProfile && (
           <div className="mt-auto pt-4 border-t border-border space-y-3">
             <UserStatsDisplay userId={currentProfile.id} compact />
