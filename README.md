@@ -1,73 +1,95 @@
-# Welcome to your Lovable project
+# VYBE 💬  
+**Version 0.1**  
 
-## Project info
+**VYBE** is a Gen-Z–driven anonymous chat platform built for people who crave genuine, private, and fast online conversations. No accounts. No tracking. Just connection.  
 
-**URL**: https://lovable.dev/projects/a341569f-385f-48a3-b16a-8138585f8cd1
+Currently under development, VYBE aims to become the go-to place for privacy-focused digital socializing — a next-generation alternative to noisy, over-monetized chat spaces.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🚀 Vision  
+VYBE was born out of a simple frustration: social platforms talk about “community,” but they track, sell, and manipulate their users. We’re flipping that script.  
 
-**Use Lovable**
+**Goal:** Build a real-time, privacy-first chat experience for a new internet generation that values freedom and authenticity over metrics.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a341569f-385f-48a3-b16a-8138585f8cd1) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🧭 Table of Contents  
+1. [Features](#features)  
+2. [Tech Stack](#tech-stack)  
+3. [Live Demo](#live-demo)  
+4. [Development Status](#development-status)  
+5. [Roadmap](#roadmap)  
+6. [Contributing](#contributing)  
+7. [Contact](#contact)  
+8. [License](#license)
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## ✨ Features  
+- **Anonymous Chatting:** Instant access — no sign-ups, logins, or cookies tracking you.  
+- **Privacy First:** Designed with minimal data collection and no user profiling.  
+- **Real-Time Messaging:** Instant communication built with scalable tech.  
+- **Modern UI:** Clean, youthful, and mobile-friendly design tailored for Gen Z.  
+- **Global Access:** Works seamlessly across devices, browsers, and networks.  
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## 🧰 Tech Stack  
+- **Frontend:** TypeScript  
+- **Backend:** PL/pgSQL for database logic and operations  
+- **Hosting:** [Vercel](https://vercel.com)  
+- **Other Tools:** Various open-source libraries for chat handling, session management, and UI effects  
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+*(Architecture diagrams, database schema, and deployment details will be added as development continues.)*
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 💻 Live Demo  
+VYBE is online and evolving:  
+👉 **[vybzchat.vercel.app](https://vybzchat.vercel.app/)**  
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+Current build: **v0.1** — proof of concept, open to testing and feedback.
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🧪 Development Status  
+VYBE is in **early development**. Expect bugs, interface experiments, and rapid updates.  
 
-**Use GitHub Codespaces**
+Planned updates include:  
+- End-to-end encrypted rooms  
+- Customizable chat themes and avatars  
+- Secure session handling  
+- Moderation tools for public chatrooms  
+- Open API for community projects  
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 🛣️ Roadmap  
+**v0.2** – UI polish, core backend optimizations  
+**v0.3** – Encryption & message safety layer  
+**v0.4** – Mobile PWA release  
+**v1.0** – Full public launch + community moderation system  
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🤝 Contributing  
+We’re looking for Investors We need Your Help to Grow this Our Project.  
+---
 
-## How can I deploy this project?
+## 📬 Contact  
+**Creator:** mehran | Ai Developer
+**Project Page:** [vybzchat.vercel.app](https://vybzchat.vercel.app/)
 
-Simply open [Lovable](https://lovable.dev/projects/a341569f-385f-48a3-b16a-8138585f8cd1) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## 📜 License  
+This project is licensed under the **MIT License** — open-source and free for responsible use.
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### 🌍 The Vibe  
+> “The internet should feel human again — not harvested.  
+> VYBE is about reconnecting, not being watched.”
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
