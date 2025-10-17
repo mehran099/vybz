@@ -161,7 +161,22 @@ export const ChatMessage = ({ messageId, username, content, color, timestamp, is
             </PopoverContent>
           </Popover>
         </div>
-        <p className="text-xs md:text-sm text-foreground break-words mb-2">{content}</p>
+        <p className="text-xs md:text-sm text-foreground break-words mb-2">
+          {content.split(/(@\w+)/g).map((part, index) => {
+            if (part.startsWith('@')) {
+              return (
+                <span 
+                  key={index}
+                  className="font-semibold bg-primary/20 px-1 rounded"
+                  style={{ color }}
+                >
+                  {part}
+                </span>
+              );
+            }
+            return <span key={index}>{part}</span>;
+          })}
+        </p>
         
         {/* Reactions display */}
         {reactions.length > 0 && (
