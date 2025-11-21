@@ -748,14 +748,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      calculate_level: {
-        Args: { xp_amount: number }
-        Returns: number
-      }
-      cleanup_typing_indicators: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      calculate_level: { Args: { xp_amount: number }; Returns: number }
+      cleanup_typing_indicators: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
