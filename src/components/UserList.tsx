@@ -5,6 +5,7 @@ interface User {
   id: string;
   username: string;
   display_color: string;
+  user_id?: string;
   is_online?: boolean;
   is_guest?: boolean;
 }
@@ -13,9 +14,11 @@ interface UserListProps {
   users: User[];
   currentUserId: string;
   onDMClick?: (userId: string, username: string) => void;
+  onVoiceCall?: (user: User) => void;
+  onVideoCall?: (user: User) => void;
 }
 
-export const UserList = ({ users, currentUserId, onDMClick }: UserListProps) => {
+export const UserList = ({ users, currentUserId, onDMClick, onVoiceCall, onVideoCall }: UserListProps) => {
   return (
     <div className="w-64 bg-card/50 backdrop-blur-xl border-l border-white/10 p-4 overflow-y-auto">
       <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
@@ -61,6 +64,8 @@ export const UserList = ({ users, currentUserId, onDMClick }: UserListProps) => 
                   username={user.username}
                   currentUserId={currentUserId}
                   onDMClick={() => onDMClick?.(user.id, user.username)}
+                  onVoiceCall={onVoiceCall ? () => onVoiceCall(user) : undefined}
+                  onVideoCall={onVideoCall ? () => onVideoCall(user) : undefined}
                 />
               </div>
             )}

@@ -13,10 +13,13 @@ import { Leaderboard } from "@/components/Leaderboard";
 import { ThemeSettings } from "@/components/ThemeSettings";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ModerationDashboard } from "@/components/ModerationDashboard";
+import { CallInterface } from "@/components/CallInterface";
+import { IncomingCallModal } from "@/components/IncomingCallModal";
 import { Button } from "@/components/ui/button";
 import { Hash, Menu, MessageSquare, Compass, Users, TrendingUp, Palette, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { CallType } from "@/utils/webrtc";
 
 interface Message {
   id: string;
@@ -37,6 +40,19 @@ interface Profile {
   is_guest?: boolean;
 }
 
+interface CallState {
+  callId: string;
+  isInitiator: boolean;
+  callType: CallType;
+  remoteUser: Profile;
+}
+
+interface IncomingCall {
+  callId: string;
+  caller: Profile;
+  callType: CallType;
+}
+
 export default function Chat() {
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -49,6 +65,8 @@ export default function Chat() {
   const [dmPartner, setDmPartner] = useState<Profile | null>(null);
   const [userRole, setUserRole] = useState<string>('user');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeCall, setActiveCall] = useState<CallState | null>(null);
+  const [incomingCall, setIncomingCall] = useState<IncomingCall | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -59,6 +77,12 @@ export default function Chat() {
     checkAuth();
     fetchGlobalRoom();
   }, []);
+
+  useEffect(() => {
+    if (currentProfile) {
+      setupCallSignaling();
+    }
+  }, [currentProfile]);
 
   useEffect(() => {
     scrollToBottom();
@@ -218,6 +242,84 @@ export default function Chat() {
     return () => {
       supabase.removeChannel(channel);
     };
+  };
+
+  const setupCallSignaling = () => {
+    if (!currentProfile) return;
+
+    const callChannel = supabase
+      .channel(`user:${currentProfile.id}:calls`)
+      .on('broadcast', { event: 'incoming-call' }, ({ payload }) => {
+        setIncomingCall({
+          callId: payload.callId,
+          caller: payload.caller,
+          callType: payload.callType
+        });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(callChannel);
+    };
+  };
+
+  const initiateCall = async (targetUser: Profile, callType: CallType) => {
+    if (!currentProfile) return;
+
+    const callId = `call_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    // Notify the other user
+    const notificationChannel = supabase.channel(`user:${targetUser.id}:calls`);
+    await notificationChannel.subscribe();
+    
+    await notificationChannel.send({
+      type: 'broadcast',
+      event: 'incoming-call',
+      payload: {
+        callId,
+        caller: {
+          id: currentProfile.id,
+          username: currentProfile.username,
+          display_color: currentProfile.display_color
+        },
+        callType
+      }
+    });
+
+    // Start the call
+    setActiveCall({
+      callId,
+      isInitiator: true,
+      callType,
+      remoteUser: targetUser
+    });
+
+    toast.success(`Calling ${targetUser.username}...`);
+  };
+
+  const acceptCall = () => {
+    if (!incomingCall || !currentProfile) return;
+
+    setActiveCall({
+      callId: incomingCall.callId,
+      isInitiator: false,
+      callType: incomingCall.callType,
+      remoteUser: incomingCall.caller
+    });
+
+    setIncomingCall(null);
+  };
+
+  const rejectCall = () => {
+    if (incomingCall) {
+      toast.info(`Call from ${incomingCall.caller.username} declined`);
+      setIncomingCall(null);
+    }
+  };
+
+  const endCall = () => {
+    setActiveCall(null);
+    toast.info("Call ended");
   };
 
   const handleSendMessage = async (content: string) => {
@@ -462,6 +564,18 @@ export default function Chat() {
             currentProfileId={currentProfile?.id || ''}
             partner={dmPartner}
             onBack={() => setDmPartner(null)}
+            onVoiceCall={() => initiateCall({
+              id: dmPartner.id,
+              username: dmPartner.username,
+              display_color: dmPartner.display_color,
+              user_id: dmPartner.user_id || dmPartner.id
+            }, 'audio')}
+            onVideoCall={() => initiateCall({
+              id: dmPartner.id,
+              username: dmPartner.username,
+              display_color: dmPartner.display_color,
+              user_id: dmPartner.user_id || dmPartner.id
+            }, 'video')}
           />
         ) : view === 'dms' ? (
           <DMList
@@ -532,6 +646,18 @@ export default function Chat() {
                 setView('dms');
               }
             }}
+            onVoiceCall={(user) => initiateCall({
+              id: user.id,
+              username: user.username,
+              display_color: user.display_color,
+              user_id: user.user_id || user.id
+            }, 'audio')}
+            onVideoCall={(user) => initiateCall({
+              id: user.id,
+              username: user.username,
+              display_color: user.display_color,
+              user_id: user.user_id || user.id
+            }, 'video')}
           />
         </div>
       )}
@@ -543,6 +669,33 @@ export default function Chat() {
         currentProfileId={currentProfile?.id || ''}
         onRoomCreated={handleJoinRoom}
       />
+
+      {/* Active Call Interface */}
+      {activeCall && currentProfile && (
+        <CallInterface
+          callId={activeCall.callId}
+          isInitiator={activeCall.isInitiator}
+          callType={activeCall.callType}
+          localUser={{
+            id: currentProfile.id,
+            username: currentProfile.username,
+            display_color: currentProfile.display_color
+          }}
+          remoteUser={activeCall.remoteUser}
+          onEndCall={endCall}
+        />
+      )}
+
+      {/* Incoming Call Modal */}
+      {incomingCall && (
+        <IncomingCallModal
+          isOpen={true}
+          caller={incomingCall.caller}
+          callType={incomingCall.callType}
+          onAccept={acceptCall}
+          onReject={rejectCall}
+        />
+      )}
     </div>
   );
 }
