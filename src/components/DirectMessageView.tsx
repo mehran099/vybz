@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Send, Smile } from "lucide-react";
+import { ArrowLeft, Send, Smile, Phone, Video } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -25,9 +25,11 @@ interface DirectMessageViewProps {
   currentProfileId: string;
   partner: Profile;
   onBack: () => void;
+  onVoiceCall?: () => void;
+  onVideoCall?: () => void;
 }
 
-export const DirectMessageView = ({ currentProfileId, partner, onBack }: DirectMessageViewProps) => {
+export const DirectMessageView = ({ currentProfileId, partner, onBack, onVoiceCall, onVideoCall }: DirectMessageViewProps) => {
   const [messages, setMessages] = useState<DirectMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -199,12 +201,36 @@ export const DirectMessageView = ({ currentProfileId, partner, onBack }: DirectM
         >
           {partner.username[0].toUpperCase()}
         </div>
-        <div>
+        <div className="flex-1">
           <h3 className="font-semibold" style={{ color: partner.display_color }}>
             {partner.username}
           </h3>
           {isTyping && (
             <p className="text-xs text-muted-foreground">typing...</p>
+          )}
+        </div>
+        
+        {/* Call Buttons */}
+        <div className="flex items-center gap-2">
+          {onVoiceCall && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onVoiceCall}
+              className="text-green-500 hover:text-green-600 hover:bg-green-500/10"
+            >
+              <Phone className="w-5 h-5" />
+            </Button>
+          )}
+          {onVideoCall && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onVideoCall}
+              className="text-blue-500 hover:text-blue-600 hover:bg-blue-500/10"
+            >
+              <Video className="w-5 h-5" />
+            </Button>
           )}
         </div>
       </div>

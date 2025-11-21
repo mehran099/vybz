@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UserPlus, MessageSquare, UserMinus, Flag, UserX, Heart, MoreVertical } from "lucide-react";
+import { UserPlus, MessageSquare, UserMinus, Flag, UserX, Heart, MoreVertical, Phone, Video } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -16,9 +16,11 @@ interface UserActionsMenuProps {
   username: string;
   currentUserId: string;
   onDMClick?: () => void;
+  onVoiceCall?: () => void;
+  onVideoCall?: () => void;
 }
 
-export const UserActionsMenu = ({ userId, username, currentUserId, onDMClick }: UserActionsMenuProps) => {
+export const UserActionsMenu = ({ userId, username, currentUserId, onDMClick, onVoiceCall, onVideoCall }: UserActionsMenuProps) => {
   const { toast } = useToast();
   const [isFollowing, setIsFollowing] = useState(false);
   const [isFriend, setIsFriend] = useState(false);
@@ -146,6 +148,22 @@ export const UserActionsMenu = ({ userId, username, currentUserId, onDMClick }: 
             <DropdownMenuSeparator className="bg-white/10" />
           </>
         )}
+
+        {onVoiceCall && (
+          <DropdownMenuItem onClick={onVoiceCall} className="cursor-pointer text-green-400">
+            <Phone className="mr-2 h-4 w-4" />
+            Voice Call
+          </DropdownMenuItem>
+        )}
+
+        {onVideoCall && (
+          <DropdownMenuItem onClick={onVideoCall} className="cursor-pointer text-blue-400">
+            <Video className="mr-2 h-4 w-4" />
+            Video Call
+          </DropdownMenuItem>
+        )}
+
+        {(onVoiceCall || onVideoCall) && <DropdownMenuSeparator className="bg-white/10" />}
         
         <DropdownMenuItem onClick={handleAddFriend} className="cursor-pointer">
           <UserPlus className="mr-2 h-4 w-4" />
