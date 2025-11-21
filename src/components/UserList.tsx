@@ -6,6 +6,7 @@ interface User {
   username: string;
   display_color: string;
   is_online?: boolean;
+  is_guest?: boolean;
 }
 
 interface UserListProps {
@@ -27,25 +28,32 @@ export const UserList = ({ users, currentUserId, onDMClick }: UserListProps) => 
             key={user.id}
             className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-all group"
           >
-            <div className="flex items-center gap-3 flex-1 min-w-0">
-              <div className="relative">
-                <div 
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                  style={{ 
-                    background: `linear-gradient(135deg, ${user.display_color}, ${user.display_color}aa)`,
-                  }}
-                >
-                  {user.username[0].toUpperCase()}
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="relative">
+                  <div 
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                    style={{ 
+                      background: `linear-gradient(135deg, ${user.display_color}, ${user.display_color}aa)`,
+                    }}
+                  >
+                    {user.username[0].toUpperCase()}
+                  </div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-card"></div>
                 </div>
-                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-card"></div>
+                <div className="flex flex-col gap-1 flex-1 min-w-0">
+                  <span 
+                    className="text-sm font-medium truncate"
+                    style={{ color: user.display_color }}
+                  >
+                    {user.username}
+                  </span>
+                  {user.is_guest && (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-medium w-fit">
+                      GUEST
+                    </span>
+                  )}
+                </div>
               </div>
-              <span 
-                className="text-sm font-medium truncate"
-                style={{ color: user.display_color }}
-              >
-                {user.username}
-              </span>
-            </div>
             {user.id !== currentUserId && (
               <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                 <UserActionsMenu
