@@ -124,10 +124,13 @@ export default function Index() {
                 className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground shadow-lg hover:shadow-glow"
                 disabled={isLoading}
               >
-                {isLoading ? "Joining..." : "Join as Guest"}
+                {isLoading ? "Joining..." : "🚀 Join as Guest"}
               </Button>
               <p className="text-xs text-muted-foreground">
-                Instant access • No email required • Anonymous
+                ✓ Instant access • ✓ No email required • ✓ Anonymous
+              </p>
+              <p className="text-[10px] text-muted-foreground/60 mt-1">
+                Guests can chat, join rooms, and connect with others instantly
               </p>
             </form>
           </Card>

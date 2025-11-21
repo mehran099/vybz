@@ -34,6 +34,7 @@ interface Profile {
   username: string;
   display_color: string;
   user_id: string;
+  is_guest?: boolean;
 }
 
 export default function Chat() {
@@ -87,6 +88,12 @@ export default function Chat() {
 
     if (profile) {
       setCurrentProfile(profile);
+      
+      // Show welcome message for guests
+      if (profile.is_guest) {
+        toast.info(`Welcome, ${profile.username}! You're chatting as a guest 👋`);
+      }
+      
       fetchOnlineUsers();
       
       // Check user role
@@ -166,7 +173,7 @@ export default function Chat() {
   const fetchOnlineUsers = async () => {
     const { data } = await supabase
       .from("profiles")
-      .select("id, username, display_color, user_id")
+      .select("id, username, display_color, user_id, is_guest")
       .order("username");
 
     if (data) {
@@ -383,13 +390,30 @@ export default function Chat() {
               >
                 {currentProfile.username[0].toUpperCase()}
               </div>
-              <span 
-                className="font-medium text-sm truncate"
-                style={{ color: currentProfile.display_color }}
-              >
-                {currentProfile.username}
-              </span>
+              <div className="flex-1 min-w-0">
+                <span 
+                  className="font-medium text-sm truncate block"
+                  style={{ color: currentProfile.display_color }}
+                >
+                  {currentProfile.username}
+                </span>
+                {currentProfile.is_guest && (
+                  <span className="text-[10px] text-muted-foreground">Guest User</span>
+                )}
+              </div>
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={async () => {
+                await supabase.auth.signOut();
+                navigate("/");
+                toast.success("Logged out successfully");
+              }}
+            >
+              {currentProfile.is_guest ? "Leave Chat" : "Logout"}
+            </Button>
           </div>
         )}
       </div>
