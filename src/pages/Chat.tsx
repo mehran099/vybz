@@ -338,128 +338,155 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden relative">
+      {/* Cyber grid background */}
+      <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:30px_30px] pointer-events-none" />
+      
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-background/90 backdrop-blur-md z-40 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
       
-      {/* Sidebar */}
+      {/* Sidebar - Gaming Style */}
       <div className={`
         fixed md:relative z-50 md:z-0
-        w-64 h-full bg-card border-r border-border p-4 flex flex-col
+        w-72 h-full bg-card/80 backdrop-blur-xl border-r-2 border-primary/30 flex flex-col
         transition-transform duration-300 ease-in-out
+        shadow-[inset_0_0_100px_hsl(var(--primary)/0.05)]
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
-        <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            VYBE
-          </h1>
+        {/* Header */}
+        <div className="p-4 border-b-2 border-primary/20 flex items-center justify-between bg-gradient-to-b from-primary/10 to-transparent">
+          <div>
+            <h1 className="font-['Orbitron'] text-3xl font-black tracking-tighter">
+              <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent drop-shadow-[0_0_20px_hsl(var(--primary))]">
+                VYBE
+              </span>
+            </h1>
+            <div className="flex items-center gap-2 mt-1">
+              <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_10px_hsl(var(--primary))]" />
+              <span className="text-[10px] font-bold text-primary uppercase tracking-wider">CONNECTED</span>
+            </div>
+          </div>
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden border-2 border-primary/30 hover:border-primary"
             onClick={() => setSidebarOpen(false)}
           >
             <Menu className="w-5 h-5" />
           </Button>
         </div>
         
-        <div className="space-y-2 flex-1">
+        {/* Navigation - Gaming Style */}
+        <div className="space-y-1 flex-1 p-3">
+          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 px-2">// CHANNELS</div>
+          
           <Button
             variant={view === 'chat' ? 'default' : 'ghost'}
-            className="w-full justify-start"
+            className="w-full justify-start font-bold uppercase tracking-wide text-xs h-11 border-2 border-transparent hover:border-primary/30 transition-all"
             onClick={() => {
               setView('chat');
               setSidebarOpen(false);
             }}
           >
-            <Hash className="w-5 h-5 mr-2" />
+            <Hash className="w-4 h-4 mr-3" />
             <span>{currentRoom?.name || 'Chat'}</span>
+            {view === 'chat' && <div className="ml-auto w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_hsl(var(--primary))]" />}
           </Button>
           
           <Button
             variant={view === 'rooms' ? 'default' : 'ghost'}
-            className="w-full justify-start"
+            className="w-full justify-start font-bold uppercase tracking-wide text-xs h-11 border-2 border-transparent hover:border-primary/30 transition-all"
             onClick={() => {
               setView('rooms');
               setSidebarOpen(false);
             }}
           >
-            <Compass className="w-5 h-5 mr-2" />
+            <Compass className="w-4 h-4 mr-3" />
             <span>Browse Rooms</span>
+            {view === 'rooms' && <div className="ml-auto w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_hsl(var(--primary))]" />}
           </Button>
+          
+          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 px-2 mt-4">// SOCIAL</div>
           
           <Button
             variant={view === 'dms' ? 'default' : 'ghost'}
-            className="w-full justify-start"
+            className="w-full justify-start font-bold uppercase tracking-wide text-xs h-11 border-2 border-transparent hover:border-primary/30 transition-all"
             onClick={() => {
               setView('dms');
               setSidebarOpen(false);
             }}
           >
-            <MessageSquare className="w-5 h-5 mr-2" />
+            <MessageSquare className="w-4 h-4 mr-3" />
             <span>Direct Messages</span>
+            {view === 'dms' && <div className="ml-auto w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_hsl(var(--primary))]" />}
           </Button>
 
           <Button
             variant={view === 'friends' ? 'default' : 'ghost'}
-            className="w-full justify-start"
+            className="w-full justify-start font-bold uppercase tracking-wide text-xs h-11 border-2 border-transparent hover:border-primary/30 transition-all"
             onClick={() => {
               setView('friends');
               setSidebarOpen(false);
             }}
           >
-            <Users className="w-5 h-5 mr-2" />
+            <Users className="w-4 h-4 mr-3" />
             <span>Friends</span>
+            {view === 'friends' && <div className="ml-auto w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_hsl(var(--primary))]" />}
           </Button>
+
+          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 px-2 mt-4">// EXTRAS</div>
 
           <Button
             variant={view === 'leaderboard' ? 'default' : 'ghost'}
-            className="w-full justify-start"
+            className="w-full justify-start font-bold uppercase tracking-wide text-xs h-11 border-2 border-transparent hover:border-primary/30 transition-all"
             onClick={() => {
               setView('leaderboard');
               setSidebarOpen(false);
             }}
           >
-            <TrendingUp className="w-5 h-5 mr-2" />
+            <TrendingUp className="w-4 h-4 mr-3" />
             <span>Leaderboard</span>
+            {view === 'leaderboard' && <div className="ml-auto w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_hsl(var(--primary))]" />}
           </Button>
 
           <Button
             variant={view === 'theme' ? 'default' : 'ghost'}
-            className="w-full justify-start"
+            className="w-full justify-start font-bold uppercase tracking-wide text-xs h-11 border-2 border-transparent hover:border-primary/30 transition-all"
             onClick={() => {
               setView('theme');
               setSidebarOpen(false);
             }}
           >
-            <Palette className="w-5 h-5 mr-2" />
+            <Palette className="w-4 h-4 mr-3" />
             <span>Theme</span>
+            {view === 'theme' && <div className="ml-auto w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_hsl(var(--primary))]" />}
           </Button>
 
           {(userRole === 'admin' || userRole === 'moderator') && (
             <Button
               variant={view === 'moderation' ? 'default' : 'ghost'}
-              className="w-full justify-start"
+              className="w-full justify-start font-bold uppercase tracking-wide text-xs h-11 border-2 border-transparent hover:border-primary/30 transition-all"
               onClick={() => {
                 setView('moderation');
                 setSidebarOpen(false);
               }}
             >
-              <Shield className="w-5 h-5 mr-2" />
+              <Shield className="w-4 h-4 mr-3" />
               <span>Moderation</span>
+              {view === 'moderation' && <div className="ml-auto w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_hsl(var(--primary))]" />}
             </Button>
           )}
         </div>
 
-        {/* Support Creator Section */}
-        <div className="mt-4 p-4 border-t border-border space-y-3">
-          <h3 className="text-sm font-semibold text-muted-foreground">Support Creator</h3>
-          <p className="text-xs text-muted-foreground">Your tips help us make the site bigger!</p>
+        {/* Support Creator - Gaming Style */}
+        <div className="p-3 border-t-2 border-primary/20 space-y-2 bg-gradient-to-t from-primary/5 to-transparent">
+          <h3 className="text-[10px] font-black text-primary uppercase tracking-wider">// SUPPORT CREATOR</h3>
+          <p className="text-[10px] text-muted-foreground leading-tight">Help us level up the platform!</p>
           
           <a 
             href="https://patreon.com/VYBE09?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink"
@@ -467,54 +494,63 @@ export default function Chat() {
             rel="noopener noreferrer"
             className="block"
           >
-            <Button variant="outline" className="w-full justify-start" size="sm">
+            <Button variant="outline" className="w-full justify-start text-xs h-9 border-2 border-accent/50 hover:border-accent hover:bg-accent/10">
               <span className="mr-2">❤️</span>
-              Support on Patreon
+              PATREON
             </Button>
           </a>
 
-          <div className="text-xs space-y-1 p-2 rounded-lg bg-muted/50">
-            <p className="font-medium">Pakistan Tips:</p>
-            <p className="font-mono">RAAST: 03213512136</p>
-            <p className="font-mono break-all">IBAN: PK02JCMA05089232135121136</p>
+          <div className="text-[9px] space-y-0.5 p-2 bg-card/60 border border-border/50 font-mono">
+            <p className="font-bold text-primary">PAKISTAN TIPS:</p>
+            <p>RAAST: 03213512136</p>
+            <p className="break-all text-[8px]">IBAN: PK02JCMA05089232135121136</p>
           </div>
         </div>
 
+        {/* User Profile - Gaming Style */}
         {currentProfile && (
-          <div className="mt-auto pt-4 border-t border-border space-y-3">
+          <div className="p-3 border-t-2 border-primary/20 space-y-2 bg-gradient-to-t from-secondary/5 to-transparent">
             <UserStatsDisplay userId={currentProfile.id} compact />
-            <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/50">
+            <div className="flex items-center gap-3 p-2.5 bg-card/60 backdrop-blur border-2 border-border/50 hover:border-primary/30 transition-all">
               <div 
-                className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
+                className="w-10 h-10 rounded-sm flex items-center justify-center text-sm font-black border-2 relative overflow-hidden"
                 style={{ 
-                  background: `linear-gradient(135deg, ${currentProfile.display_color}, ${currentProfile.display_color}aa)`,
+                  background: `linear-gradient(135deg, ${currentProfile.display_color}, ${currentProfile.display_color}dd)`,
+                  borderColor: currentProfile.display_color,
+                  boxShadow: `0 0 15px ${currentProfile.display_color}60`
                 }}
               >
-                {currentProfile.username[0].toUpperCase()}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
+                <span className="relative z-10">{currentProfile.username[0].toUpperCase()}</span>
               </div>
               <div className="flex-1 min-w-0">
                 <span 
-                  className="font-medium text-sm truncate block"
-                  style={{ color: currentProfile.display_color }}
+                  className="font-black text-xs uppercase truncate block tracking-wide"
+                  style={{ 
+                    color: currentProfile.display_color,
+                    textShadow: `0 0 10px ${currentProfile.display_color}80`
+                  }}
                 >
                   {currentProfile.username}
                 </span>
                 {currentProfile.is_guest && (
-                  <span className="text-[10px] text-muted-foreground">Guest User</span>
+                  <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
+                    [GUEST]
+                  </span>
                 )}
               </div>
             </div>
             <Button
               variant="outline"
               size="sm"
-              className="w-full"
+              className="w-full font-bold uppercase text-xs border-2 border-destructive/50 hover:border-destructive hover:bg-destructive/10"
               onClick={async () => {
                 await supabase.auth.signOut();
                 navigate("/");
                 toast.success("Logged out successfully");
               }}
             >
-              {currentProfile.is_guest ? "Leave Chat" : "Logout"}
+              {currentProfile.is_guest ? "DISCONNECT" : "LOGOUT"}
             </Button>
           </div>
         )}
@@ -586,49 +622,76 @@ export default function Chat() {
           />
         ) : (
           <>
-            {/* Chat Header */}
-            <div className="h-16 bg-card border-b border-border px-4 md:px-6 flex items-center justify-between">
-              <div className="flex items-center gap-3">
+            {/* Chat Header - Cyberpunk Style */}
+            <div className="h-16 bg-card/60 backdrop-blur-xl border-b-2 border-primary/20 px-4 md:px-6 flex items-center justify-between relative overflow-hidden">
+              {/* Accent bar */}
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-secondary to-accent" />
+              
+              <div className="flex items-center gap-3 relative z-10">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="md:hidden"
+                  className="md:hidden border-2 border-primary/30 hover:border-primary"
                   onClick={() => setSidebarOpen(true)}
                 >
                   <Menu className="w-5 h-5" />
                 </Button>
-                <Hash className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+                <Hash className="w-6 h-6 text-primary drop-shadow-[0_0_10px_hsl(var(--primary))]" />
                 <div className="min-w-0">
-                  <h2 className="font-semibold text-base md:text-lg truncate">{currentRoom?.name || 'Chat'}</h2>
-                  <p className="text-xs text-muted-foreground hidden sm:block truncate">
-                    {currentRoom?.description || 'Welcome to VYBE!'}
+                  <h2 className="font-['Orbitron'] font-black text-base md:text-lg uppercase tracking-wide truncate">
+                    <span className="text-foreground drop-shadow-[0_0_15px_hsl(var(--primary))]">
+                      {currentRoom?.name || 'Chat'}
+                    </span>
+                  </h2>
+                  <p className="text-[10px] text-muted-foreground hidden sm:block truncate uppercase tracking-wider font-bold">
+                    // {currentRoom?.description || 'Welcome to VYBE!'}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-primary/10 border border-primary/30 text-xs font-bold uppercase tracking-wider">
+                  <div className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_hsl(var(--primary))]" />
+                  <span className="text-primary">{onlineUsers.length} ONLINE</span>
+                </div>
                 <ThemeToggle />
               </div>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-2">
-              {messages.map((msg) => (
-                <ChatMessage
-                  key={msg.id}
-                  messageId={msg.id}
-                  username={msg.profiles.username}
-                  content={msg.content}
-                  color={msg.profiles.display_color}
-                  timestamp={msg.created_at}
-                  isOwn={msg.user_id === currentProfile?.id}
-                  currentUserId={currentProfile?.id}
-                />
-              ))}
+            {/* Messages - Gaming Chat Style */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-1 bg-gradient-to-b from-background via-background to-background/95">
+              {messages.length === 0 ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center space-y-4">
+                    <div className="w-20 h-20 mx-auto bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
+                      <MessageSquare className="w-10 h-10 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-['Orbitron'] text-lg font-black text-foreground uppercase">NO MESSAGES YET</p>
+                      <p className="text-sm text-muted-foreground mt-1">Be the first to start the conversation!</p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                messages.map((msg) => (
+                  <ChatMessage
+                    key={msg.id}
+                    messageId={msg.id}
+                    username={msg.profiles.username}
+                    content={msg.content}
+                    color={msg.profiles.display_color}
+                    timestamp={msg.created_at}
+                    isOwn={msg.user_id === currentProfile?.id}
+                    currentUserId={currentProfile?.id}
+                  />
+                ))
+              )}
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
-            <ChatInput onSendMessage={handleSendMessage} disabled={!currentProfile} />
+            {/* Chat Input */}
+            <div className="p-4 bg-card/80 backdrop-blur-xl border-t-2 border-primary/20">
+              <ChatInput onSendMessage={handleSendMessage} disabled={!currentProfile} />
+            </div>
           </>
         )}
       </div>
