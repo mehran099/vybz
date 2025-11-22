@@ -8,50 +8,54 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 240 10% 8%;
-    --foreground: 0 0% 98%;
+    --background: 220 25% 6%;
+    --foreground: 180 100% 95%;
 
-    --card: 240 10% 12%;
-    --card-foreground: 0 0% 98%;
+    --card: 220 20% 10%;
+    --card-foreground: 180 100% 95%;
 
-    --popover: 240 10% 10%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 220 25% 8%;
+    --popover-foreground: 180 100% 95%;
 
-    --primary: 262 83% 65%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 180 100% 50%;
+    --primary-foreground: 220 25% 6%;
     
-    --primary-glow: 262 83% 75%;
+    --primary-glow: 180 100% 60%;
     
-    --secondary: 217 91% 60%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 280 100% 60%;
+    --secondary-foreground: 220 25% 6%;
 
-    --muted: 240 8% 20%;
-    --muted-foreground: 240 5% 65%;
+    --muted: 220 15% 18%;
+    --muted-foreground: 180 20% 60%;
 
-    --accent: 330 81% 60%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 320 100% 55%;
+    --accent-foreground: 220 25% 6%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 100% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 8% 20%;
-    --input: 240 8% 18%;
-    --ring: 262 83% 65%;
+    --border: 180 50% 25%;
+    --input: 220 20% 12%;
+    --ring: 180 100% 50%;
 
-    --radius: 0.75rem;
+    --radius: 0.25rem;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(262 83% 65%), hsl(217 91% 60%));
-    --gradient-accent: linear-gradient(135deg, hsl(330 81% 60%), hsl(262 83% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(262 83% 65% / 0.2), hsl(217 91% 60% / 0.2));
+    /* Gaming Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(180 100% 50%), hsl(280 100% 60%));
+    --gradient-accent: linear-gradient(135deg, hsl(320 100% 55%), hsl(280 100% 70%));
+    --gradient-hero: linear-gradient(135deg, hsl(180 100% 50% / 0.15), hsl(280 100% 60% / 0.15));
+    --gradient-cyber: linear-gradient(135deg, hsl(180 100% 40%), hsl(280 100% 50%), hsl(320 100% 45%));
     
-    /* Shadows */
-    --shadow-glow: 0 0 40px hsl(262 83% 65% / 0.3);
-    --shadow-glow-lg: 0 0 60px hsl(262 83% 65% / 0.4);
-    --shadow-card: 0 8px 32px hsl(240 10% 4% / 0.4);
+    /* Neon Glows */
+    --shadow-glow: 0 0 30px hsl(180 100% 50% / 0.5), 0 0 60px hsl(180 100% 50% / 0.3);
+    --shadow-glow-lg: 0 0 40px hsl(180 100% 50% / 0.6), 0 0 80px hsl(180 100% 50% / 0.4);
+    --shadow-glow-secondary: 0 0 30px hsl(280 100% 60% / 0.5), 0 0 60px hsl(280 100% 60% / 0.3);
+    --shadow-glow-accent: 0 0 30px hsl(320 100% 55% / 0.5), 0 0 60px hsl(320 100% 55% / 0.3);
+    --shadow-card: 0 8px 32px hsl(220 25% 4% / 0.6);
 
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 }
 
@@ -62,30 +66,60 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Rajdhani', 'Orbitron', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 500;
   }
+
+  /* Gaming Font Imports */
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
   /* Smooth animations */
   * {
     transition: var(--transition-smooth);
   }
 
+  /* Cyberpunk scanline effect */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(0, 245, 255, 0.02) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: scanline 8s linear infinite;
+  }
+
+  @keyframes scanline {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(4px); }
+  }
+
   /* Scrollbar styling */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   ::-webkit-scrollbar-track {
     background: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
   }
 
   ::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted));
-    border-radius: 4px;
+    background: linear-gradient(180deg, hsl(var(--primary)), hsl(var(--secondary)));
+    border-radius: 0;
+    box-shadow: var(--shadow-glow);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground));
+    background: linear-gradient(180deg, hsl(var(--primary-glow)), hsl(var(--secondary)));
   }
 }
