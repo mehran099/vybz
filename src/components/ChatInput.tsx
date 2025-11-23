@@ -203,7 +203,7 @@ export const ChatInput = ({ onSendMessage, disabled }: ChatInputProps) => {
         <Button
           type="submit"
           disabled={!message.trim() || disabled || isSending}
-          variant="cyber"
+          variant="gradient"
           size="icon"
           className="h-12 w-12 shrink-0"
         >

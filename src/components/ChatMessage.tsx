@@ -113,18 +113,15 @@ export const ChatMessage = ({ messageId, username, content, color, timestamp, is
   };
 
   return (
-    <div className={`group flex gap-3 p-3 hover:bg-muted/10 transition-all relative ${isOwn ? 'flex-row-reverse' : ''}`}>
-      {/* Avatar with neon glow */}
+    <div className={`group flex gap-3 p-2 hover:bg-muted/30 rounded-xl transition-all relative ${isOwn ? 'flex-row-reverse' : ''}`}>
+      {/* Avatar */}
       <div 
-        className="w-10 h-10 rounded-sm flex items-center justify-center text-sm font-black shrink-0 border-2 relative overflow-hidden"
+        className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 shadow-lg"
         style={{ 
-          background: `linear-gradient(135deg, ${color}, ${color}dd)`,
-          borderColor: color,
-          boxShadow: `0 0 20px ${color}60, inset 0 0 20px ${color}30`
+          background: color,
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
-        <span className="relative z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+        <span className="text-white">
           {username[0].toUpperCase()}
         </span>
       </div>
@@ -132,17 +129,14 @@ export const ChatMessage = ({ messageId, username, content, color, timestamp, is
       {/* Message content */}
       <div className={`flex-1 min-w-0 ${isOwn ? 'flex flex-col items-end' : ''}`}>
         {/* Header */}
-        <div className={`flex items-baseline gap-2 mb-1.5 ${isOwn ? 'flex-row-reverse' : ''}`}>
+        <div className={`flex items-baseline gap-2 mb-1 ${isOwn ? 'flex-row-reverse' : ''}`}>
           <span 
-            className="font-bold text-sm tracking-wide"
-            style={{ 
-              color,
-              textShadow: `0 0 10px ${color}80`
-            }}
+            className="font-semibold text-sm"
+            style={{ color }}
           >
-            {username.toUpperCase()}
+            {username}
           </span>
-          <span className="text-[10px] text-muted-foreground font-mono uppercase">
+          <span className="text-xs text-muted-foreground">
             {format(new Date(timestamp), 'HH:mm')}
           </span>
           
@@ -177,35 +171,19 @@ export const ChatMessage = ({ messageId, username, content, color, timestamp, is
 
         {/* Message bubble */}
         <div 
-          className={`inline-block max-w-[85%] px-4 py-2.5 relative group/bubble ${
+          className={`inline-block max-w-[85%] px-4 py-2.5 rounded-2xl shadow-sm ${
             isOwn 
-              ? 'bg-primary/20 border-2 border-primary/40 rounded-l-lg rounded-br-lg' 
-              : 'bg-card/60 border-2 border-border/50 rounded-r-lg rounded-bl-lg'
+              ? 'bg-primary text-primary-foreground' 
+              : 'bg-card border border-border'
           }`}
-          style={isOwn ? {
-            boxShadow: `0 0 20px ${color}30, inset 0 0 20px ${color}10`
-          } : {}}
         >
-          {/* Corner accent */}
-          <div 
-            className={`absolute w-2 h-2 ${isOwn ? '-left-1 bottom-0' : '-right-1 bottom-0'}`}
-            style={{ 
-              background: isOwn ? color : 'hsl(var(--border))',
-              clipPath: 'polygon(0 0, 100% 100%, 0 100%)'
-            }}
-          />
-          
           <p className="text-sm leading-relaxed break-words">
             {content.split(/(@\w+)/g).map((part, index) => {
               if (part.startsWith('@')) {
                 return (
                   <span 
                     key={index}
-                    className="font-bold bg-accent/30 px-1.5 py-0.5 rounded border border-accent/50"
-                    style={{ 
-                      color: 'hsl(var(--accent))',
-                      textShadow: '0 0 10px hsl(var(--accent) / 0.5)'
-                    }}
+                    className="font-semibold bg-accent/20 px-1.5 py-0.5 rounded-lg"
                   >
                     {part}
                   </span>
@@ -223,14 +201,14 @@ export const ChatMessage = ({ messageId, username, content, color, timestamp, is
               <button
                 key={reaction.emoji}
                 onClick={() => handleReaction(reaction.emoji)}
-                className={`flex items-center gap-1 px-2.5 py-1 text-xs font-bold transition-all border-2 ${
+                className={`flex items-center gap-1 px-2 py-1 text-xs rounded-full transition-all ${
                   currentUserId && reaction.userIds?.includes(currentUserId)
-                    ? 'bg-primary/20 border-primary shadow-[0_0_15px_hsl(var(--primary)/0.4)] scale-105'
-                    : 'bg-muted/50 border-border hover:bg-muted hover:border-primary/50 hover:scale-105'
+                    ? 'bg-primary/20 border-2 border-primary/50'
+                    : 'bg-muted hover:bg-muted/80'
                 }`}
               >
-                <span className="text-base">{reaction.emoji}</span>
-                <span className="font-black">{reaction.count}</span>
+                <span>{reaction.emoji}</span>
+                <span className="font-semibold">{reaction.count}</span>
               </button>
             ))}
           </div>

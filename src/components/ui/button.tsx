@@ -5,22 +5,27 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-bold uppercase tracking-wider ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden group",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_hsl(var(--primary)/0.5)] hover:shadow-[0_0_30px_hsl(var(--primary)/0.7)] border-2 border-primary/50 hover:border-primary relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-700",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-[0_0_20px_hsl(var(--destructive)/0.5)] border-2 border-destructive/50",
-        outline: "border-2 border-primary bg-transparent text-primary hover:bg-primary/10 shadow-[inset_0_0_20px_hsl(var(--primary)/0.2)] hover:shadow-[inset_0_0_30px_hsl(var(--primary)/0.4)]",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-[0_0_20px_hsl(var(--secondary)/0.5)] border-2 border-secondary/50",
-        ghost: "hover:bg-accent/20 hover:text-accent border border-transparent hover:border-accent/50 hover:shadow-[0_0_15px_hsl(var(--accent)/0.3)]",
+        default:
+          "bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:scale-[1.02] active:scale-[0.98]",
+        destructive:
+          "bg-destructive text-destructive-foreground shadow-lg shadow-destructive/25 hover:shadow-xl hover:shadow-destructive/40 hover:scale-[1.02] active:scale-[0.98]",
+        outline:
+          "border-2 border-border bg-transparent hover:bg-muted hover:border-primary/50 transition-colors",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-muted hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        cyber: "bg-gradient-to-r from-primary via-secondary to-accent text-background hover:opacity-90 shadow-[0_0_30px_hsl(var(--primary)/0.6)] border-2 border-primary animate-glow-pulse font-black text-base",
+        gradient:
+          "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/50 hover:scale-[1.02] active:scale-[0.98] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-1000",
       },
       size: {
-        default: "h-10 px-6 py-2",
-        sm: "h-9 px-4 text-xs",
-        lg: "h-12 px-10 text-base",
+        default: "h-11 px-6 py-2.5",
+        sm: "h-9 px-4 text-sm",
+        lg: "h-13 px-8 text-base",
         icon: "h-10 w-10",
       },
     },
@@ -28,7 +33,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  },
+  }
 );
 
 export interface ButtonProps
