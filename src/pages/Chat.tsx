@@ -16,7 +16,7 @@ import { ModerationDashboard } from "@/components/ModerationDashboard";
 import { CallInterface } from "@/components/CallInterface";
 import { IncomingCallModal } from "@/components/IncomingCallModal";
 import { Button } from "@/components/ui/button";
-import { Hash, Menu, MessageSquare, Compass, Users, TrendingUp, Palette, Shield } from "lucide-react";
+import { Hash, Menu, MessageSquare, Compass, Users, TrendingUp, Palette, Shield, UserCircle, Settings as SettingsIcon, LogOut, X } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { CallType } from "@/utils/webrtc";
@@ -653,6 +653,24 @@ export default function Chat() {
                   <div className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_hsl(var(--primary))]" />
                   <span className="text-primary">{onlineUsers.length} ONLINE</span>
                 </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => navigate("/friends")}
+                  className="hover:bg-primary/10 border-2 border-transparent hover:border-primary/30"
+                  title="Friends"
+                >
+                  <UserCircle className="w-5 h-5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => navigate("/settings")}
+                  className="hover:bg-primary/10 border-2 border-transparent hover:border-primary/30"
+                  title="Settings"
+                >
+                  <SettingsIcon className="w-5 h-5" />
+                </Button>
                 <ThemeToggle />
               </div>
             </div>
